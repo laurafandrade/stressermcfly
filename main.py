@@ -1,74 +1,81 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, session
 import threading
 import time
 from datetime import datetime
 import os
 
 app = Flask(__name__)
-app.secret_key = 'mcflykeysupersecreta'
+app.secret_key = 'McFlySystem2025'  # Chave secreta pro login
 
-# Cria pasta de logs se não existir
+# Diretório de logs
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
-# Usuário e senha
+# Login
 USERNAME = 'admin'
-PASSWORD = '123456'
+PASSWORD = '1234'  # Altere sua senha aqui
 
-# Função simulada de ataque
-def start_attack(url, time_attack):
-    print(f"Iniciando ataque para {url} por {time_attack} segundos...")
-    now = datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
-    code = os.urandom(4).hex()
+# Função de ataque (simulação)
+def ataque(url, tempo, threads):
+    fim = time.time() + tempo
+    while time.time() < fim:
+        for _ in range(threads):
+            print(f"Enviando requisição para {url}")
+        time.sleep(1)
 
-    log = f"URL:{url} | DATA&HORA:{now} | CÓDIGO:{code}\n"
-    with open(f"logs/log_{now}.txt", 'w') as file:
-        file.write(log)
+    gerar_log(url)
 
-    time.sleep(time_attack)
-    print(f"Ataque para {url} finalizado.")
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        user = request.form['username']
-        password = request.form['password']
-        if user == USERNAME and password == PASSWORD:
-            session['user'] = user
-            return redirect(url_for('dashboard'))
-        else:
-            return render_template('login.html', error='Credenciais inválidas')
-    return render_template('login.html')
+# Gera relatório
+def gerar_log(url):
+    agora = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+    codigo = os.urandom(4).hex().upper()
+    log = f"URL:{url} | DATA&HORA:{agora} | CÓDIGO:{codigo}\n"
 
-@app.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    if 'user' not in session:
+    with open('logs/relatorio.txt', 'a') as f:
+        f.write(log)
+
+
+@app.route('/')
+def home():
+    if 'logged_in' in session:
+        return render_template('index.html')
+    else:
         return redirect(url_for('login'))
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
-        url = request.form['url']
-        time_attack = int(request.form['time'])
-        if time_attack > 200:
-            time_attack = 200
+        if (request.form['username'] == USERNAME and
+                request.form['password'] == PASSWORD):
+            session['logged_in'] = True
+            return redirect(url_for('home'))
+        else:
+            return render_template('login.html', erro='Credenciais incorretas')
+    return render_template('login.html')
 
-        threading.Thread(target=start_attack, args=(url, time_attack)).start()
-
-        return render_template('index.html', message=f"Ataque iniciado para {url} por {time_attack} segundos!")
-
-    return render_template('index.html')
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.pop('logged_in', None)
     return redirect(url_for('login'))
 
-@app.route('/logs')
-def download_logs():
-    list_logs = os.listdir('logs')
-    if list_logs:
-        latest_log = sorted(list_logs)[-1]
-        return send_file(f'logs/{latest_log}', as_attachment=True)
-    return "Nenhum log encontrado."
+
+@app.route('/ataque', methods=['POST'])
+def iniciar_ataque():
+    if 'logged_in' in session:
+        url = request.form['url']
+        tempo = min(int(request.form['tempo']), 200)  # Limite de 200 segundos
+        threads = int(request.form['threads'])
+
+        thread = threading.Thread(target=ataque, args=(url, tempo, threads))
+        thread.start()
+
+        return f"Ataque iniciado em {url} por {tempo} segundos com {threads} threads."
+    else:
+        return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
