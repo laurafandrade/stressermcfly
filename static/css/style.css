@@ -1,0 +1,63 @@
+body {
+    background: linear-gradient(135deg, #000000, #111111);
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.login-container, .dashboard-container {
+    background: rgba(20, 20, 20, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px #00ffff;
+    text-align: center;
+    animation: fadeIn 1.2s;
+}
+
+h1, h2 {
+    color: #00ffff;
+    margin-bottom: 20px;
+}
+
+input {
+    padding: 10px;
+    margin: 10px;
+    width: 80%;
+    border: none;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    outline: none;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #00ffff;
+    color: #000;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00bbbb;
+}
+
+.button {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    background: #00ffff;
+    border-radius: 8px;
+    color: #000;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.button.logout {
+    background: crimson;
