@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel | McFlySystem</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-container">
+        <h1>🔥 McFlySystem Painel 🔥</h1>
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% endif %}
+        <form method="POST">
+            <input type="text" name="url" placeholder="URL alvo" required>
+            <input type="number" name="time" placeholder="Tempo (segundos)" required>
+            <button type="submit">Iniciar Ataque</button>
+        </form>
+        <a href="/logs" class="button">📄 Baixar Último Log</a>
+        <a href="/logout" class="button logout">🚪 Sair</a>
+    </div>
+</body>
+</html>
