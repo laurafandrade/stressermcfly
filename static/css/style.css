@@ -2,7 +2,7 @@ body {
     background: #0f0f0f;
     color: white;
     font-family: 'Arial';
-    background-image: url('/static/img/fundo.gif');
+    background-image: url('/static/img/fundo.jpg');
     background-size: cover;
     background-position: center;
     margin: 0;
