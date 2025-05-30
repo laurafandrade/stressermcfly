@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatórios - McFlySystem</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="logs-page">
+    <div class="painel">
+        <h1>📜 Logs de Ataques</h1>
+        <a class="btn" href="/">⬅️ Voltar</a>
+        <a class="btn btn-danger" href="/limpar_logs" onclick="return confirm('Deseja limpar os logs?');">🗑️ Limpar Logs</a>
+
+        <div class="log-box">
+            {% if logs %}
+                <pre>{{ logs }}</pre>
+            {% else %}
+                <p>🚫 Nenhum log encontrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
