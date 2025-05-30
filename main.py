@@ -15,8 +15,8 @@ if not os.path.exists('logs'):
     os.makedirs('logs')
 
 # Login
-USERNAME = 'admin'
-PASSWORD = '1234'  # Pode trocar aqui se quiser
+USERNAME = 'mcflyoperador123'
+PASSWORD = 'apenasumasenha12345'  # Pode trocar aqui se quiser
 
 # Limite máximo de threads
 MAX_THREADS = 500
