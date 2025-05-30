@@ -1,63 +1,78 @@
 body {
-    background: linear-gradient(135deg, #000000, #111111);
-    color: #fff;
-    font-family: 'Segoe UI', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
+    background: #0f0f0f;
+    color: white;
+    font-family: 'Arial';
+    background-image: url('/static/img/fundo.gif');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
 }
 
-.login-container, .dashboard-container {
-    background: rgba(20, 20, 20, 0.9);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 0 20px #00ffff;
+h1 {
     text-align: center;
-    animation: fadeIn 1.2s;
+    color: #00f7ff;
 }
 
-h1, h2 {
-    color: #00ffff;
-    margin-bottom: 20px;
+h1 span {
+    color: #ff00c8;
+}
+
+form {
+    text-align: center;
+    margin-top: 20px;
 }
 
 input {
     padding: 10px;
     margin: 10px;
-    width: 80%;
     border: none;
     border-radius: 8px;
-    background: #222;
-    color: white;
-    outline: none;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 10px 30px;
     border: none;
-    border-radius: 8px;
-    background: #00ffff;
+    background: #00f7ff;
     color: #000;
+    border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
 }
 
 button:hover {
-    background: #00bbbb;
+    background: #ff00c8;
+    color: white;
 }
 
-.button {
-    display: inline-block;
-    margin: 10px;
-    padding: 10px 20px;
-    background: #00ffff;
-    border-radius: 8px;
-    color: #000;
+.login-container {
+    background: rgba(0, 0, 0, 0.8);
+    width: 300px;
+    margin: 100px auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00f7ff;
+}
+
+.senha-container {
+    position: relative;
+}
+
+.senha-container img {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 25px;
+    cursor: pointer;
+}
+
+.erro {
+    color: red;
+}
+
+.logout {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: red;
     text-decoration: none;
-    transition: 0.3s;
 }
-
-.button.logout {
-    background: crimson;
