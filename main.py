@@ -12,8 +12,8 @@ if not os.path.exists('logs'):
     os.makedirs('logs')
 
 # Login
-USERNAME = 'admin'
-PASSWORD = '1234'  # Altere sua senha aqui
+USERNAME = 'mcflyoperador123'
+PASSWORD = 'apenasumasenha12345'  # Altere sua senha aqui
 
 # Função de ataque (simulação)
 def ataque(url, tempo, threads):
