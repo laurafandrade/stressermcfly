@@ -2,24 +2,25 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Login | McFlySystem</title>
+    <title>Login - McFlySystem</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body class="login-page">
     <div class="login-container">
-        <h2>McFlySystem 🔥</h2>
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
+        <h1>McFly<span>System</span></h1>
         <form method="POST">
-            <input type="text" name="username" placeholder="Usuário" required>
-            <div class="password-wrapper">
-                <input type="password" id="password" name="password" placeholder="Senha" required>
-                <img id="toggle" src="/static/img/eye.png" alt="Show" onclick="togglePassword()">
+            <input type="text" name="username" placeholder="Usuário" required><br>
+            <div class="senha-container">
+                <input type="password" id="senha" name="password" placeholder="Senha" required>
+                <img src="/static/img/olho-fechado.png" id="toggleSenha" onclick="mostrarSenha()">
             </div>
+            {% if erro %}
+                <p class="erro">{{ erro }}</p>
+            {% endif %}
             <button type="submit">Entrar</button>
         </form>
     </div>
-<script src="/static/js/script.js"></script>
+
+    <script src="/static/js/script.js"></script>
 </body>
 </html>
